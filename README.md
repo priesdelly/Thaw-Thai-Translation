@@ -34,6 +34,9 @@ brew install --cask thaw
 
 ## Features/Roadmap
 
+<details>
+<summary>Click to view the full Features & Roadmap list</summary>
+
 ### Menu bar item management
 
 - [x] Hide menu bar items
@@ -77,6 +80,8 @@ brew install --cask thaw
 - [x] Launch at login
 - [x] Automatic updates
 - [ ] Menu bar widgets
+
+</details>
 
 ## Why does Thaw only support macOS 14 and later?
 
