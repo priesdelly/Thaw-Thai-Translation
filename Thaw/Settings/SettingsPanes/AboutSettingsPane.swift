@@ -45,7 +45,6 @@ struct AboutSettingsPane: View {
         }
     }
 
-    @ViewBuilder
     private func contentForm(cornerStyle: RoundedCornerStyle) -> some View {
         IceForm(spacing: 0) {
             mainContent(containerShape: RoundedRectangle(cornerRadius: 20, style: cornerStyle))
@@ -54,7 +53,6 @@ struct AboutSettingsPane: View {
         }
     }
 
-    @ViewBuilder
     private func mainContent(containerShape: some InsettableShape) -> some View {
         IceSection(spacing: 0, options: .plain) {
             appIconAndCopyrightSection
@@ -73,7 +71,6 @@ struct AboutSettingsPane: View {
         .containerShape(containerShape)
     }
 
-    @ViewBuilder
     private var appIconAndCopyrightSection: some View {
         IceSection(options: .plain) {
             HStack(spacing: 10) {
@@ -102,19 +99,16 @@ struct AboutSettingsPane: View {
         }
     }
 
-    @ViewBuilder
     private var updatesSection: some View {
         IceSection(options: .hasDividers) {
             automaticallyCheckForUpdates
             automaticallyDownloadUpdates
-            if updatesManager.canCheckForUpdates {
-                checkForUpdates
-            }
+            updateChannel
+            checkForUpdates
         }
         .frame(maxWidth: 600)
     }
 
-    @ViewBuilder
     private var automaticallyCheckForUpdates: some View {
         Toggle(
             "Automatically check for updates",
@@ -122,7 +116,6 @@ struct AboutSettingsPane: View {
         )
     }
 
-    @ViewBuilder
     private var automaticallyDownloadUpdates: some View {
         Toggle(
             "Automatically download updates",
@@ -130,19 +123,37 @@ struct AboutSettingsPane: View {
         )
     }
 
-    @ViewBuilder
+    private var updateChannel: some View {
+        HStack {
+            Text("Update channel")
+            Spacer()
+            Picker("Update channel", selection: $updatesManager.allowsBetaUpdates) {
+                Text("Stable").tag(false)
+                Text("Development").tag(true)
+            }
+            .pickerStyle(.segmented)
+            .labelsHidden()
+        }
+    }
+
     private var checkForUpdates: some View {
         HStack {
             Button("Check for Updates") {
                 updatesManager.checkForUpdates()
             }
+            // Disable the button instead of hiding the whole stack
+            .disabled(!updatesManager.canCheckForUpdates)
+
             Spacer()
+
             Text("Last checked: \(lastUpdateCheckString)")
                 .font(.caption)
+                .monospacedDigit()
+                .foregroundStyle(.secondary)
+                .opacity(updatesManager.lastUpdateCheckDate == nil ? 0.5 : 1.0)
         }
     }
 
-    @ViewBuilder
     private func bottomBar(containerShape: some InsettableShape) -> some View {
         HStack {
             Button("Quit \(Bundle.main.displayName)") {

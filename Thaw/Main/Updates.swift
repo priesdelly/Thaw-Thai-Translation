@@ -30,6 +30,19 @@ final class UpdatesManager: NSObject, ObservableObject {
         updaterController.updater
     }
 
+    /// A Boolean value that indicates whether the user wants to receive beta updates.
+    var allowsBetaUpdates: Bool {
+        get {
+            UserDefaults.standard.bool(forKey: "AllowsBetaUpdates")
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "AllowsBetaUpdates")
+            Task {
+                updater.checkForUpdatesInBackground()
+            }
+        }
+    }
+
     /// A Boolean value that indicates whether to automatically check for updates.
     var automaticallyChecksForUpdates: Bool {
         get {
@@ -87,7 +100,16 @@ final class UpdatesManager: NSObject, ObservableObject {
 }
 
 // MARK: UpdatesManager: SPUUpdaterDelegate
+
 extension UpdatesManager: @preconcurrency SPUUpdaterDelegate {
+    /// Determines which update channels are allowed.
+    func allowedChannels(for updater: SPUUpdater) -> Set<String> {
+        if UserDefaults.standard.bool(forKey: "AllowsBetaUpdates") {
+            return ["beta"]
+        }
+        return []
+    }
+
     func updater(_ updater: SPUUpdater, willScheduleUpdateCheckAfterDelay delay: TimeInterval) {
         guard let appState else {
             return
@@ -97,8 +119,11 @@ extension UpdatesManager: @preconcurrency SPUUpdaterDelegate {
 }
 
 // MARK: UpdatesManager: SPUStandardUserDriverDelegate
+
 extension UpdatesManager: @preconcurrency SPUStandardUserDriverDelegate {
-    var supportsGentleScheduledUpdateReminders: Bool { true }
+    var supportsGentleScheduledUpdateReminders: Bool {
+        true
+    }
 
     func standardUserDriverShouldHandleShowingScheduledUpdate(
         _ update: SUAppcastItem,
