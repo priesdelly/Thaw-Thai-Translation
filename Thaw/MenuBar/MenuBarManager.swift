@@ -305,7 +305,7 @@ final class MenuBarManager: ObservableObject {
 
     /// Shows the secondary context menu.
     func showSecondaryContextMenu(at point: CGPoint) {
-        let menu = NSMenu(title: "Ice")
+        let menu = NSMenu(title: "\(Constants.displayName)")
 
         let editAppearanceItem = NSMenuItem(
             title: "Edit Menu Bar Appearance…",
