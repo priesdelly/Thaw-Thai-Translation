@@ -25,7 +25,7 @@ final class MenuBarAppearanceEditorPanel: NSObject, NSPopoverDelegate {
     private var cancellables = Set<AnyCancellable>()
 
     /// The underlying popover.
-    private let popover = NSPopover()
+    private var popover: NSPopover?
 
     /// An invisible window used to anchor the popover to the top of the screen.
     private var anchorWindow: NSWindow?
@@ -33,18 +33,27 @@ final class MenuBarAppearanceEditorPanel: NSObject, NSPopoverDelegate {
     /// Sets up the popover.
     func performSetup(with appState: AppState) {
         self.appState = appState
-        configurePopover()
-        configureContent(with: appState)
         configureObservers(with: appState)
     }
 
     /// Shows the popover on the given screen.
-    func show(on screen: NSScreen) {
-        guard let anchorView = anchorView(for: screen) else {
+    func show(on screen: NSScreen, onDone: (() -> Void)? = nil) {
+        guard
+            let appState,
+            let anchorView = anchorView(for: screen)
+        else {
             return
         }
+        close()
+        popover = makePopover(appState: appState, onDone: onDone)
         updateContentSize()
-        popover.show(relativeTo: anchorView.bounds, of: anchorView, preferredEdge: .maxY)
+        popover?.show(relativeTo: anchorView.bounds, of: anchorView, preferredEdge: .maxY)
+    }
+
+    /// Closes the popover if it is shown.
+    func close() {
+        popover?.performClose(nil)
+        popover = nil
     }
 
     // MARK: NSPopoverDelegate
@@ -61,24 +70,12 @@ final class MenuBarAppearanceEditorPanel: NSObject, NSPopoverDelegate {
 
     // MARK: Private
 
-    private func configurePopover() {
-        popover.behavior = .semitransient
-        popover.animates = true
-        popover.delegate = self
-    }
-
-    private func configureContent(with appState: AppState) {
-        let controller = MenuBarAppearanceEditorHostingController(appState: appState)
-        popover.contentViewController = controller
-        popover.appearance = NSApp.effectiveAppearance
-    }
-
     private func configureObservers(with appState: AppState) {
         var c = Set<AnyCancellable>()
 
         NSApp.publisher(for: \.effectiveAppearance)
-            .sink { [weak popover] appearance in
-                popover?.appearance = appearance
+            .sink { [weak self] appearance in
+                self?.popover?.appearance = appearance
             }
             .store(in: &c)
 
@@ -91,8 +88,21 @@ final class MenuBarAppearanceEditorPanel: NSObject, NSPopoverDelegate {
         cancellables = c
     }
 
+    private func makePopover(appState: AppState, onDone: (() -> Void)?) -> NSPopover {
+        let popover = NSPopover()
+        popover.behavior = .semitransient
+        popover.animates = true
+        popover.delegate = self
+        popover.appearance = NSApp.effectiveAppearance
+
+        let controller = MenuBarAppearanceEditorHostingController(appState: appState, onDone: onDone)
+        popover.contentViewController = controller
+        return popover
+    }
+
     private func updateContentSize() {
         guard
+            let popover,
             let hostingController = popover.contentViewController as? MenuBarAppearanceEditorHostingController
         else {
             return
@@ -141,9 +151,9 @@ private final class MenuBarAppearanceEditorHostingController: NSHostingControlle
     private weak var appState: AppState?
     private var cancellables = Set<AnyCancellable>()
 
-    init(appState: AppState) {
+    init(appState: AppState, onDone: (() -> Void)?) {
         self.appState = appState
-        super.init(rootView: MenuBarAppearanceEditorContentView(appState: appState))
+        super.init(rootView: MenuBarAppearanceEditorContentView(appState: appState, onDone: onDone))
         updatePreferredContentSize()
 
         appState.appearanceManager.$configuration
@@ -175,11 +185,13 @@ private final class MenuBarAppearanceEditorHostingController: NSHostingControlle
 
 private struct MenuBarAppearanceEditorContentView: View {
     @ObservedObject var appState: AppState
+    let onDone: (() -> Void)?
 
     var body: some View {
         MenuBarAppearanceEditor(
             appearanceManager: appState.appearanceManager,
-            location: .panel
+            location: .panel,
+            onDone: onDone
         )
         .environmentObject(appState)
     }

@@ -380,7 +380,14 @@ final class MenuBarManager: ObservableObject {
         guard let screen = MenuBarAppearanceEditorPanel.defaultScreen else {
             return
         }
-        appearanceEditorPanel.show(on: screen)
+        appearanceEditorPanel.show(on: screen) {
+            self.dismissAppearanceEditorPanel()
+        }
+    }
+
+    /// Dismisses the appearance editor panel if it is shown.
+    func dismissAppearanceEditorPanel() {
+        appearanceEditorPanel.close()
     }
 
     /// Returns the menu bar section with the given name.

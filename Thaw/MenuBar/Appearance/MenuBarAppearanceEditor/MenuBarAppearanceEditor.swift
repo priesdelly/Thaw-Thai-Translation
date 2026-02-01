@@ -20,6 +20,7 @@ struct MenuBarAppearanceEditor: View {
     @State private var isResetPromptPresented = false
 
     let location: Location
+    let onDone: (() -> Void)?
 
     var body: some View {
         if #available(macOS 26.0, *) {
@@ -86,7 +87,11 @@ struct MenuBarAppearanceEditor: View {
         HStack {
             if case .panel = location {
                 Button("Done") {
-                    dismissWindow()
+                    if let onDone {
+                        onDone()
+                    } else {
+                        dismissWindow()
+                    }
                 }
             }
 
