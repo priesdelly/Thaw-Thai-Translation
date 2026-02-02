@@ -274,18 +274,13 @@ final class ControlItem {
 
             if identifier == .visible {
                 appState.settings.general.$showIceIcon
-                    .combineLatest(statusItem.publisher(for: \.isVisible))
                     .removeDuplicates()
                     .receive(on: DispatchQueue.main)
-                    .sink { [weak self] shouldShow, _ in
+                    .sink { [weak self] shouldShow in
                         guard let self else {
                             return
                         }
-                        if shouldShow {
-                            addToMenuBar()
-                        } else {
-                            removeFromMenuBar()
-                        }
+                        setIceIconDisplayed(shouldShow)
                     }
                     .store(in: &c)
 
@@ -346,6 +341,10 @@ final class ControlItem {
 
         switch identifier {
         case .visible:
+            if !appState.settings.general.showIceIcon {
+                hideIceIconCompletely()
+                return
+            }
             updateStatusItemVisibility(true)
             button.appearsDisabled = false
 
@@ -454,6 +453,28 @@ final class ControlItem {
         let cached = ControlItemDefaults[.preferredPosition, autosaveName]
         statusItem.isVisible = false
         ControlItemDefaults[.preferredPosition, autosaveName] = cached
+    }
+
+    /// Updates the status item's visibility without clearing its preferred position.
+    private func setIceIconDisplayed(_ shouldShow: Bool) {
+        statusItem.isVisible = true
+        if shouldShow {
+            updateStatusItem()
+            return
+        }
+
+        hideIceIconCompletely()
+    }
+
+    /// Hides the Ice icon without removing the status item or losing autosave data.
+    private func hideIceIconCompletely() {
+        constraint?.isActive = false
+        statusItem.length = 0
+
+        if let window {
+            let size = withMutableCopy(of: window.frame.size) { $0.width = 1 }
+            window.setContentSize(size)
+        }
     }
 
     /// Performs the control item's action.
