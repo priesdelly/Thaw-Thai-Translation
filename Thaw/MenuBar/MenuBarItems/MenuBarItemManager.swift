@@ -1022,10 +1022,14 @@ extension MenuBarItemManager {
     ) async throws -> (start: CGPoint, end: CGPoint) {
         let itemBounds = try await getCurrentBounds(for: item)
         let targetBounds = try await getCurrentBounds(for: destination.targetItem)
+
+        var start: CGPoint
+        var end: CGPoint
+
         switch destination {
         case .leftOfItem:
-            var start = CGPoint(x: targetBounds.minX, y: targetBounds.minY)
-            var end = start
+            start = CGPoint(x: targetBounds.minX, y: targetBounds.minY)
+            end = start
             if itemBounds.maxX <= targetBounds.minX {
                 // Direction of movement: ->
                 end.x -= itemBounds.width
@@ -1033,10 +1037,9 @@ extension MenuBarItemManager {
                 // Direction of movement: <-
                 start.x -= 1
             }
-            return (start, end)
         case .rightOfItem:
-            var start = CGPoint(x: targetBounds.maxX, y: targetBounds.minY)
-            var end = start
+            start = CGPoint(x: targetBounds.maxX, y: targetBounds.minY)
+            end = start
             if itemBounds.minX <= targetBounds.maxX {
                 // Direction of movement: ->
                 end.x -= itemBounds.width
@@ -1044,8 +1047,15 @@ extension MenuBarItemManager {
                 // Direction of movement: <-
                 start.x += 1
             }
-            return (start, end)
         }
+
+        if #unavailable(macOS 16.0),
+           let frame = NSScreen.screenWithActiveMenuBar?.getApplicationMenuFrame()
+        {
+            // On macOS 14/15, keep the initial press away from the Apple menu hit region.
+            start.x = max(start.x, frame.maxX + 6)
+        }
+        return (start, end)
     }
 
     /// Returns a Boolean value that indicates whether the given menu bar
