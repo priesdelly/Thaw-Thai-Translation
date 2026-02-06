@@ -14,8 +14,6 @@
 		7127A9FF2C4886D100D99DEF /* IfritStatic in Frameworks */ = {isa = PBXBuildFile; productRef = 7127A9FE2C4886D100D99DEF /* IfritStatic */; };
 		7168EE532E281CBC00FF9830 /* AXSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 7168EE522E281CBC00FF9830 /* AXSwift */; };
 		7188A68C2E27F9ED008F131D /* MenuBarItemService.xpc in Embed XPC Services */ = {isa = PBXBuildFile; fileRef = 7188A6832E27F9ED008F131D /* MenuBarItemService.xpc */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		E2B484002F364A85002B2694 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = E2B483FF2F364A85002B2694 /* Localizable.xcstrings */; };
-		E2B484012F364A85002B2694 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = E2B483FF2F364A85002B2694 /* Localizable.xcstrings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,7 +43,6 @@
 /* Begin PBXFileReference section */
 		7166832A2A767E6A006ABF84 /* Thaw.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Thaw.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7188A6832E27F9ED008F131D /* MenuBarItemService.xpc */ = {isa = PBXFileReference; explicitFileType = "wrapper.xpc-service"; includeInIndex = 0; path = MenuBarItemService.xpc; sourceTree = BUILT_PRODUCTS_DIR; };
-		E2B483FF2F364A85002B2694 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -53,6 +50,13 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Resources/Info.plist,
+			);
+			target = 7188A6822E27F9ED008F131D /* MenuBarItemService */;
+		};
+		E2B484022F364D60002B2694 /* Exceptions for "Thaw" folder in "MenuBarItemService" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Resources/Localizable.xcstrings,
 			);
 			target = 7188A6822E27F9ED008F131D /* MenuBarItemService */;
 		};
@@ -83,6 +87,7 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				E2B782F92F2BF98100CF0BBD /* Exceptions for "Thaw" folder in "Thaw" target */,
+				E2B484022F364D60002B2694 /* Exceptions for "Thaw" folder in "MenuBarItemService" target */,
 			);
 			path = Thaw;
 			sourceTree = "<group>";
@@ -116,7 +121,6 @@
 		716683212A767E6A006ABF84 = {
 			isa = PBXGroup;
 			children = (
-				E2B483FF2F364A85002B2694 /* Localizable.xcstrings */,
 				7188A69E2E280BB4008F131D /* Shared */,
 				71BDFBE12C978E2A00EF145F /* Thaw */,
 				7188A6842E27F9ED008F131D /* MenuBarItemService */,
@@ -240,7 +244,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E2B484012F364A85002B2694 /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -248,7 +251,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E2B484002F364A85002B2694 /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
