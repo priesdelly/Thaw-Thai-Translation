@@ -1891,9 +1891,9 @@ extension MenuBarItemManager {
             // survive but clear the in-memory contexts so they don't block us. The
             // relocatePendingItems path will catch them on the next cache cycle.
             if !temporarilyShownItemContexts.isEmpty {
-                logger.warning(
+                diagLog.warning(
                     """
-                    Force-rehide left \(self.temporarilyShownItemContexts.count, privacy: .public) \
+                    Force-rehide left \(self.temporarilyShownItemContexts.count) \
                     stale context(s); clearing in-memory contexts (pendingRelocations will handle recovery)
                     """
                 )
@@ -2044,10 +2044,10 @@ extension MenuBarItemManager {
         }
 
         // 3. Fallback: use the control item for the original section.
-        logger.debug(
+        diagLog.debug(
             """
-            Return destination neighbors not found for \(context.tag, privacy: .public); \
-            falling back to section-level destination for \(context.originalSection.logString, privacy: .public)
+            Return destination neighbors not found for \(context.tag); \
+            falling back to section-level destination for \(context.originalSection.logString)
             """
         )
         switch context.originalSection {
@@ -2069,7 +2069,7 @@ extension MenuBarItemManager {
             return nil
         }
 
-        logger.error("No control items found to resolve return destination for \(context.tag, privacy: .public)")
+        diagLog.error("No control items found to resolve return destination for \(context.tag)")
         return nil
     }
 
@@ -2139,10 +2139,10 @@ extension MenuBarItemManager {
                 if context.notFoundAttempts < 10 {
                     failedContexts.append(context)
                 } else {
-                    logger.warning(
+                    diagLog.warning(
                         """
-                        Giving up in-memory retry for \(context.tag, privacy: .public) after \
-                        \(context.notFoundAttempts, privacy: .public) not-found attempts; \
+                        Giving up in-memory retry for \(context.tag) after \
+                        \(context.notFoundAttempts) not-found attempts; \
                         pendingRelocations will handle recovery
                         """
                     )
@@ -2152,9 +2152,9 @@ extension MenuBarItemManager {
 
             // Resolve the best return destination using fresh items.
             guard let destination = resolveReturnDestination(for: context, in: items) else {
-                logger.error(
+                diagLog.error(
                     """
-                    Could not resolve return destination for \(item.logString, privacy: .public); \
+                    Could not resolve return destination for \(item.logString); \
                     item will remain in visible section until next cache cycle handles pendingRelocations
                     """
                 )
