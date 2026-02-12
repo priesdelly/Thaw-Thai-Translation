@@ -2674,7 +2674,6 @@ extension MenuBarItemManager {
         // Reset persisted state so macOS treats section dividers like new.
         ControlItemDefaults[.preferredPosition, ControlItem.Identifier.visible.rawValue] = 0
         ControlItemDefaults.resetChevronPositions()
-        ControlItemDefaults[.preferredPosition, ControlItem.Identifier.alwaysHidden.rawValue] = nil
 
         // Forget previously seen/pinned items so we treat everything as new.
         knownItemIdentifiers.removeAll()
@@ -2733,7 +2732,14 @@ extension MenuBarItemManager {
     }
 
     private func resetLayoutWithControlItems(controlItems: ControlItemPair, items: [MenuBarItem]) async throws -> Int {
-        let items = items
+        guard let appState else {
+            throw LayoutResetError.missingAppState
+        }
+
+        appState.hidEventManager.stopAll()
+        defer {
+            appState.hidEventManager.startAll()
+        }
 
         func movePass(_ items: [MenuBarItem], anchor: MenuBarItem) async -> Int {
             var failed = 0
@@ -2750,6 +2756,7 @@ extension MenuBarItemManager {
                     try await move(
                         item: item,
                         to: .leftOfItem(anchor),
+                        skipInputPause: true,
                         watchdogTimeout: Self.layoutWatchdogTimeout
                     )
                 } catch {
@@ -2762,6 +2769,9 @@ extension MenuBarItemManager {
 
         _ = await movePass(items, anchor: controlItems.hidden)
 
+        // Give macOS a moment to settle after the first pass.
+        try? await Task.sleep(for: .milliseconds(200))
+
         // Re-fetch and retry only items that are NOT yet in the hidden
         // section. This covers items still in the visible section (to the
         // right of the hidden control item) as well as items stuck in the
@@ -2769,10 +2779,10 @@ extension MenuBarItemManager {
         // item) when that section is enabled.
         var refreshedItems = await MenuBarItem.getMenuBarItems(option: .activeSpace)
         var failedMoves = 0
-        let refreshHiddenWID: CGWindowID? = appState?.menuBarManager
+        let refreshHiddenWID: CGWindowID? = appState.menuBarManager
             .controlItem(withName: .hidden)?.window
             .flatMap { CGWindowID(exactly: $0.windowNumber) }
-        let refreshAlwaysHiddenWID: CGWindowID? = appState?.menuBarManager
+        let refreshAlwaysHiddenWID: CGWindowID? = appState.menuBarManager
             .controlItem(withName: .alwaysHidden)?.window
             .flatMap { CGWindowID(exactly: $0.windowNumber) }
         if let refreshedControls = ControlItemPair(
@@ -2817,16 +2827,14 @@ extension MenuBarItemManager {
         await cacheItemsRegardless(skipRecentMoveCheck: true)
         suppressNextNewLeftmostItemRelocation = false
 
-        if let appState {
-            await MainActor.run {
-                appState.imageCache.clearAll()
-                appState.imageCache.performCacheCleanup()
-            }
-            await appState.imageCache.updateCacheWithoutChecks(sections: MenuBarSection.Name.allCases)
+        await MainActor.run {
+            appState.imageCache.clearAll()
+            appState.imageCache.performCacheCleanup()
+        }
+        await appState.imageCache.updateCacheWithoutChecks(sections: MenuBarSection.Name.allCases)
 
-            await MainActor.run {
-                appState.objectWillChange.send()
-            }
+        await MainActor.run {
+            appState.objectWillChange.send()
         }
 
         return failedMoves
