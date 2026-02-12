@@ -1517,6 +1517,7 @@ extension MenuBarItemManager {
     func move(
         item: MenuBarItem,
         to destination: MoveDestination,
+        skipInputPause: Bool = false,
         watchdogTimeout: DispatchTimeInterval? = nil
     ) async throws {
         guard item.isMovable else {
@@ -1526,8 +1527,9 @@ extension MenuBarItemManager {
             throw EventError.cannotComplete
         }
 
-        try await waitForUserToPauseInput()
-
+        if !skipInputPause {
+            try await waitForUserToPauseInput()
+        }
         appState.hidEventManager.stopAll()
         defer {
             appState.hidEventManager.startAll()
@@ -2001,7 +2003,7 @@ extension MenuBarItemManager {
         logger.debug("Temporarily showing \(item.logString, privacy: .public)")
 
         do {
-            try await move(item: item, to: moveDestination)
+            try await move(item: item, to: moveDestination, skipInputPause: true)
         } catch {
             logger.error("Error showing item: \(error, privacy: .public)")
             pendingRelocations.removeValue(forKey: tagIdentifier)
@@ -2225,7 +2227,7 @@ extension MenuBarItemManager {
             }
 
             do {
-                try await move(item: item, to: destination)
+                try await move(item: item, to: destination, skipInputPause: true)
                 // Successfully rehidden — remove the pending relocation entry.
                 let tagIdentifier = "\(context.tag.namespace):\(context.tag.title)"
                 pendingRelocations.removeValue(forKey: tagIdentifier)
