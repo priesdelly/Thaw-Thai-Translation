@@ -827,7 +827,7 @@ extension MenuBarItemManager {
                 if hasUserPausedInput(for: .milliseconds(50)) {
                     break
                 }
-                try await Task.sleep(for: .milliseconds(250))
+                try await Task.sleep(for: .milliseconds(50))
             }
         }
         do {
@@ -1879,8 +1879,8 @@ extension MenuBarItemManager {
     /// This method polls the item's bounds until two consecutive reads
     /// return the same value, up to a maximum wait time.
     private nonisolated func waitForItemPositionToSettle(item: MenuBarItem) async {
-        let maxWait: Duration = .milliseconds(500)
-        let pollInterval: Duration = .milliseconds(50)
+        let maxWait: Duration = .milliseconds(250)
+        let pollInterval: Duration = .milliseconds(20)
         let startTime = ContinuousClock.now
 
         var previousBounds = Bridging.getWindowBounds(for: item.windowID)
@@ -2043,7 +2043,7 @@ extension MenuBarItemManager {
         // Give the owning app a little extra time to finish processing the
         // move internally. Some apps (e.g. OneDrive) need more than just a
         // stable window position before they can respond to clicks.
-        await eventSleep(for: .milliseconds(75))
+        await eventSleep(for: .milliseconds(25))
 
         let idsBeforeClick = Set(Bridging.getWindowList(option: .onScreen))
 
@@ -2054,7 +2054,7 @@ extension MenuBarItemManager {
             return
         }
 
-        await eventSleep(for: .milliseconds(250))
+        await eventSleep(for: .milliseconds(100))
         let windowsAfterClick = WindowInfo.createWindows(option: .onScreen)
 
         let clickPID = clickItem.sourcePID ?? clickItem.ownerPID
