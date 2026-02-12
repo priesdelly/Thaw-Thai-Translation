@@ -87,16 +87,17 @@ brew install --cask thaw
 
 Thaw is currently available in the following languages:
 
-| Language     | Status   | Flag  | Completion                             |
-| :----------- | :------- | :---: | :------------------------------------- |
-| **English**  | Base     |  🇺🇸   | ![100%](https://geps.dev/progress/100) |
-| **简体中文** | Complete |  🇨🇳   | ![100%](https://geps.dev/progress/100) |
-| **正體中文** | Complete |  🇹🇼   | ![100%](https://geps.dev/progress/100) |
-| **Français** | Complete |  🇫🇷   | ![100%](https://geps.dev/progress/100) |
-| **Deutsch**  | Partial  |  🇩🇪   | ![95%](https://geps.dev/progress/95)   |
-| **한국어**   | Partial  |  🇰🇷   | ![94%](https://geps.dev/progress/94)   |
-| **Spanish**  | Partial  | 🇪🇸/🇲🇽 | ![95%](https://geps.dev/progress/95)   |
-| **ภาษาไทย**  | Complete |  🇹🇭   | ![100%](https://geps.dev/progress/100) |
+| Language             | Status   | Flag  | Completion                             |
+| :------------------- | :------- | :---: | :------------------------------------- |
+| **English**          | Base     |  🇺🇸   | ![100%](https://geps.dev/progress/100) |
+| **简体中文**         | Complete |  🇨🇳   | ![100%](https://geps.dev/progress/100) |
+| **正體中文**         | Complete |  🇹🇼   | ![100%](https://geps.dev/progress/100) |
+| **Français**         | Complete |  🇫🇷   | ![100%](https://geps.dev/progress/100) |
+| **Deutsch**          | Partial  |  🇩🇪   | ![95%](https://geps.dev/progress/95)   |
+| **Bahasa Indonesia** | Complete |  🇮🇩   | ![100%](https://geps.dev/progress/100) |
+| **한국어**           | Partial  |  🇰🇷   | ![94%](https://geps.dev/progress/94)   |
+| **Español**          | Partial  | 🇪🇸/🇲🇽 | ![95%](https://geps.dev/progress/95)   |
+| **ภาษาไทย**          | Complete |  🇹🇭   | ![100%](https://geps.dev/progress/100) |
 
 _Note: Translations are currently only available in the development build._
 
