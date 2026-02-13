@@ -611,6 +611,7 @@ final class ControlItem {
             keyEquivalent: ","
         )
         settingsItem.keyEquivalentModifierMask = .command
+        settingsItem.image = NSImage(systemSymbolName: "gear", accessibilityDescription: "Settings")
         menu.addItem(settingsItem)
 
         menu.addItem(.separator())
@@ -620,6 +621,7 @@ final class ControlItem {
             action: #selector(showSearchPanel),
             keyEquivalent: ""
         )
+        searchItem.image = NSImage(systemSymbolName: "magnifyingglass", accessibilityDescription: "Search")
         if
             let hotkey = hotkey(withAction: .searchMenuBarItems),
             let keyCombination = hotkey.keyCombination
@@ -640,23 +642,31 @@ final class ControlItem {
             else {
                 continue
             }
-            let sectionTitle = switch (section.isHidden, name) {
+            let sectionTitle: String
+            let iconName: String
+            switch (section.isHidden, name) {
             case (true, .hidden):
-                String(localized: "Show Hidden Section")
+                sectionTitle = String(localized: "Show Hidden Section")
+                iconName = "eye"
             case (false, .hidden):
-                String(localized: "Hide Hidden Section")
+                sectionTitle = String(localized: "Hide Hidden Section")
+                iconName = "eye.slash"
             case (true, .alwaysHidden):
-                String(localized: "Show Always-Hidden Section")
+                sectionTitle = String(localized: "Show Always-Hidden Section")
+                iconName = "eye"
             case (false, .alwaysHidden):
-                String(localized: "Hide Always-Hidden Section")
+                sectionTitle = String(localized: "Hide Always-Hidden Section")
+                iconName = "eye.slash"
             default:
-                String(localized: "\(section.isHidden ? "Show" : "Hide") \(name.displayString) Section")
+                sectionTitle = String(localized: "\(section.isHidden ? "Show" : "Hide") \(name.displayString) Section")
+                iconName = section.isHidden ? "eye" : "eye.slash"
             }
             let item = NSMenuItem(
                 title: sectionTitle,
                 action: #selector(toggleMenuBarSection),
                 keyEquivalent: ""
             )
+            item.image = NSImage(systemSymbolName: iconName, accessibilityDescription: sectionTitle)
             if
                 let hotkey = section.hotkey,
                 let keyCombination = hotkey.keyCombination
@@ -676,6 +686,7 @@ final class ControlItem {
             action: #selector(checkForUpdates),
             keyEquivalent: ""
         )
+        checkForUpdatesItem.image = NSImage(systemSymbolName: "arrow.triangle.2.circlepath", accessibilityDescription: "Check for Updates")
         checkForUpdatesItem.target = self
         menu.addItem(checkForUpdatesItem)
 
@@ -687,6 +698,7 @@ final class ControlItem {
             keyEquivalent: "q"
         )
         quitItem.keyEquivalentModifierMask = .command
+        quitItem.image = NSImage(systemSymbolName: "power", accessibilityDescription: "Quit")
         menu.addItem(quitItem)
 
         return menu
