@@ -96,14 +96,16 @@ Thaw is currently available in the following languages:
 | Language             | Status   | Flag  | Completion                             |
 | :------------------- | :------- | :---: | :------------------------------------- |
 | **English**          | Base     |  🇺🇸   | ![100%](https://geps.dev/progress/100) |
-| **简体中文**         | Partial  |  🇨🇳   | ![97%](https://geps.dev/progress/99)   |
-| **正體中文**         | Partial  |  🇹🇼   | ![97%](https://geps.dev/progress/99)   |
-| **Français**         | Partial  |  🇫🇷   | ![97%](https://geps.dev/progress/99)   |
-| **Deutsch**          | Partial  |  🇩🇪   | ![98%](https://geps.dev/progress/100)  |
-| **Bahasa Indonesia** | Partial  |  🇮🇩   | ![97%](https://geps.dev/progress/99)   |
-| **한국어**           | Partial  |  🇰🇷   | ![90%](https://geps.dev/progress/92)   |
+| **简体中文**         | Complete |  🇨🇳   | ![100%](https://geps.dev/progress/100) |
+| **正體中文**         | Complete |  🇹🇼   | ![100%](https://geps.dev/progress/100) |
+| **Français**         | Partial  |  🇫🇷   | ![99%](https://geps.dev/progress/99)   |
+| **Deutsch**          | Complete |  🇩🇪   | ![100%](https://geps.dev/progress/100) |
+| **Magyar**           | Complete |  🇭🇺   | ![100%](https://geps.dev/progress/100) |
+| **Bahasa Indonesia** | Complete |  🇮🇩   | ![100%](https://geps.dev/progress/100) |
+| **Italiano**         | Partial  |  🇮🇹   | ![99%](https://geps.dev/progress/99)   |
+| **한국어**           | Complete |  🇰🇷   | ![100%](https://geps.dev/progress/100) |
 | **Español**          | Complete | 🇪🇸/🇲🇽 | ![100%](https://geps.dev/progress/100) |
-| **ภาษาไทย**          | Partial  |  🇹🇭   | ![96%](https://geps.dev/progress/97)   |
+| **ภาษาไทย**          | Partial  |  🇹🇭   | ![97%](https://geps.dev/progress/97)   |
 
 _Note: Translations are currently only available in the development build._
 
