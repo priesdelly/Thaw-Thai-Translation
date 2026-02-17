@@ -227,10 +227,6 @@ final class MenuBarItemManager: ObservableObject {
 
     private(set) weak var appState: AppState?
 
-    /// A Boolean value that indicates whether a temporary show or rehide
-    /// operation is currently in progress.
-    private var isProcessingTemporaryItem = false
-
     /// Sets up the manager.
     func performSetup(with appState: AppState) async {
         MenuBarItemManager.diagLog.debug("performSetup: starting MenuBarItemManager setup")
@@ -1924,16 +1920,7 @@ extension MenuBarItemManager {
             return
         }
 
-        while isProcessingTemporaryItem {
-            MenuBarItemManager.diagLog.debug("temporarilyShow: waiting for another operation to finish")
-            try? await Task.sleep(for: .milliseconds(10))
-        }
-        isProcessingTemporaryItem = true
         MenuBarItemManager.diagLog.debug("temporarilyShow: started for \(item.logString)")
-        defer {
-            MenuBarItemManager.diagLog.debug("temporarilyShow: finished for \(item.logString)")
-            isProcessingTemporaryItem = false
-        }
 
         // Determine the displayID for this item.
         let resolvedDisplayID: CGDirectDisplayID
@@ -2171,20 +2158,7 @@ extension MenuBarItemManager {
             return
         }
 
-        if !isCalledFromTemporarilyShow {
-            while isProcessingTemporaryItem {
-                MenuBarItemManager.diagLog.debug("rehideTemporarilyShownItems: waiting for another operation to finish")
-                try? await Task.sleep(for: .milliseconds(10))
-            }
-            isProcessingTemporaryItem = true
-        }
         MenuBarItemManager.diagLog.debug("rehideTemporarilyShownItems: started (force=\(force), isCalledFromTemporarilyShow=\(isCalledFromTemporarilyShow))")
-        defer {
-            MenuBarItemManager.diagLog.debug("rehideTemporarilyShownItems: finished (force=\(force), isCalledFromTemporarilyShow=\(isCalledFromTemporarilyShow))")
-            if !isCalledFromTemporarilyShow {
-                isProcessingTemporaryItem = false
-            }
-        }
 
         if !force {
             guard !temporarilyShownItemContexts.contains(where: { $0.isShowingInterface }) else {
