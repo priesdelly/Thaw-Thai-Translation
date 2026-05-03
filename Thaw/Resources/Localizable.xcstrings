@@ -2191,9 +2191,15 @@
           }
         },
         "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lf วินาที"
+          "variations" : {
+            "plural" : {
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lf วินาที"
+                }
+              }
+            }
           }
         },
         "tr" : {
@@ -2794,9 +2800,15 @@
           }
         },
         "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld วินาที"
+          "variations" : {
+            "plural" : {
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld วินาที"
+                }
+              }
+            }
           }
         },
         "tr" : {
@@ -6973,9 +6985,15 @@
           }
         },
         "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld แอป"
+          "variations" : {
+            "plural" : {
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld แอป"
+                }
+              }
+            }
           }
         },
         "tr" : {
